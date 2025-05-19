@@ -41,7 +41,7 @@ export default defineConfig((/* ctx */) => {
       //     // server: {
       //     //   port: 80, // 🔧 Change this to your desired port number
       //     //   host: true, // 🌐 Ensures the server is accessible from the network
-      //     //   strictPort: true, // 🚫 Prevents the port from changing if it’s in use
+      //     //   strictPort: true, // 🚫 Prevents the port from changing if it's in use
       //     // },
       //     proxy: {
       //       '^/api': {
@@ -138,7 +138,7 @@ export default defineConfig((/* ctx */) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify'], // Ensure Notify plugin is registered
     },
 
     // animations: 'all', // --- includes all animations
