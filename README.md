@@ -104,7 +104,7 @@ The system has a set of pre-configured core modules that it will start up with, 
 
 ```YAML
 logger_module: logger-default
-frontend_module: front-end-quasar
+frontend_module: rp-hugokoot-frontend-chatsummary
 response_generator_module: response-generator-gemini
 reasoner_module: reasoning-demo
 triple_extractor_module: text-to-triples-rule-based
@@ -163,7 +163,7 @@ services:  # This is always present at the root.
     depends_on: ["redis"]  # Modules that this module depends on and that will be started/built along with it.
 ```
 
-Modules should generally use the Python Flask backend, which means that somewhere in the module's directory (often the root, but sometimes it is nested, e.g. see `front-end-quasar`) there will be an `app` directory, which is the Flask app. The Flask apps are always structured as follows:
+Modules should generally use the Python Flask backend, which means that somewhere in the module's directory (often the root, but sometimes it is nested, e.g. see `rp-hugokoot-frontend-chatsummary`) there will be an `app` directory, which is the Flask app. The Flask apps are always structured as follows:
 ```
 app
 |- tests...            --> The tests

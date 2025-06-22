@@ -1,14 +1,14 @@
 {
   "patient_name": "John",
-  "timestamp": "20250520_080443",
+  "timestamp": "20250622_102633",
   "messages": [
     {
-      "message": "Hi",
+      "message": "hi",
       "user": {
         "name": "John",
         "human": true
       },
-      "timestamp": "2025-05-20T08:04:16.761Z"
+      "timestamp": "2025-06-22T10:26:23.598Z"
     },
     {
       "message": "Hi, John",
@@ -16,15 +16,15 @@
         "name": "Bot",
         "human": false
       },
-      "timestamp": "2025-05-20T08:04:17.289Z"
+      "timestamp": "2025-06-22T10:26:24.633Z"
     },
     {
-      "message": "I hate pizza",
+      "message": "i like pizza",
       "user": {
         "name": "John",
         "human": true
       },
-      "timestamp": "2025-05-20T08:04:37.692Z"
+      "timestamp": "2025-06-22T10:26:27.154Z"
     },
     {
       "message": "I don't understand, could you try rephrasing it?",
@@ -32,15 +32,15 @@
         "name": "Bot",
         "human": false
       },
-      "timestamp": "2025-05-20T08:04:38.028Z"
+      "timestamp": "2025-06-22T10:26:27.735Z"
     },
     {
-      "message": "I never eat pizza",
+      "message": "i hate pizza",
       "user": {
         "name": "John",
         "human": true
       },
-      "timestamp": "2025-05-20T08:04:41.522Z"
+      "timestamp": "2025-06-22T10:26:30.203Z"
     },
     {
       "message": "I don't understand, could you try rephrasing it?",
@@ -48,7 +48,7 @@
         "name": "Bot",
         "human": false
       },
-      "timestamp": "2025-05-20T08:04:41.850Z"
+      "timestamp": "2025-06-22T10:26:30.620Z"
     }
   ]
 }

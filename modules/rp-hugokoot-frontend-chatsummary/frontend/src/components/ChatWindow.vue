@@ -91,15 +91,16 @@ async function endChat() {
     console.log('Save chat API response received:', response);
 
     if (response.ok) {
-      console.log('Chat saved successfully, showing positive notification.');
+      console.log('Chat save process started successfully.');
       $q.notify({
-        color: 'positive',
-        message: 'Chat saved successfully',
-        position: 'top'
+        color: 'info',
+        message: 'Chat saving process started...',
+        position: 'top',
+        icon: 'hourglass_top'
       });
-      messageStore.clearMessages();
+      // We don't clear messages here anymore, we wait for the 'done' sse event
     } else {
-      console.error('Failed to save chat, API response not OK.', response);
+      console.error('Failed to start save chat process.', response);
       throw new Error('Failed to save chat');
     }
   } catch (error) {
@@ -166,6 +167,46 @@ onMounted(() => {
       console.log(`Received response: ${data.message}`);
     },
     false,
+  );
+  source.addEventListener(
+    'progress',
+    function (event) {
+      const data = JSON.parse(event.data);
+      console.log(`Received progress: ${data.message}`);
+
+      const notificationConfig = {
+        message: data.message,
+        position: 'top' as const,
+        timeout: 4000, // ms
+        group: 'chat-saving'
+      };
+
+      if (data.status === 'done') {
+        $q.notify({
+          ...notificationConfig,
+          color: 'positive',
+          icon: 'done',
+          timeout: 5000
+        });
+        messageStore.clearMessages();
+      } else if (data.status === 'error') {
+        $q.notify({
+          ...notificationConfig,
+          color: 'negative',
+          icon: 'error',
+          timeout: 8000
+        });
+      }
+      else {
+        // Dismiss the previous notification in the same group
+        $q.notify({
+          ...notificationConfig,
+          color: 'info',
+          spinner: true,
+        });
+      }
+    },
+    false
   );
 });
 
