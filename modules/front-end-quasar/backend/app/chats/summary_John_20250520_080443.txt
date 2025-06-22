@@ -1,0 +1,23 @@
+Summary from Gemini API:
+========================
+
+Patient Name: John
+Timestamp: 20250520_080443
+
+--------------------
+Okay, here's an analysis of the provided chat logs, focusing on potential indicators of deception or non-adherence:
+
+**General Summary**
+
+John has stated in a previous chat that he likes pizza and always eats it on Mondays. In a more recent chat, John stated that he hates pizza and never eats it.
+
+**Analysis of Potential Deception/Non-Adherence Indicators:**
+
+*   **Inconsistencies:**
+    *   Direct contradiction regarding pizza consumption. In the earlier chat (20250520_080400), John stated "I like pizza" and "I always eat pizza on Mondays." In the later chat (20250520_080443), he stated "I hate pizza" and "I never eat pizza."
+
+*   **Engagement Level:**
+    *   Responses are short and simple.
+    *   The bot has trouble understanding the patient's responses.
+
+**Disclaimer:** This analysis is based solely on the provided chat logs and should be interpreted with caution. A healthcare professional should use this information in conjunction with other data to make informed decisions about the patient's care.

@@ -160,7 +160,7 @@ Present your findings in a concise summary, using bullet points or sections for 
         current_app.logger.debug(f"Gemini API Payload: {json.dumps(gemini_payload, indent=2)}")
         
         response = requests.post(gemini_api_url, json=gemini_payload, headers={'Content-Type': 'application/json'})
-        response.raise_for_status() # Will raise an HTTPError if the HTTP request returned an unsuccessful status code
+        response.raise_for_status()
         
         gemini_response_data = response.json()
         current_app.logger.info('Successfully received response from Gemini API.')
@@ -171,8 +171,6 @@ Present your findings in a concise summary, using bullet points or sections for 
             summary_filename = f"summary_{patient_name}_{timestamp}.txt"
             summary_filepath = os.path.join(chats_dir, summary_filename)
             
-            # Extract the text content from the Gemini response
-            # Assuming the response structure is like: {'candidates': [{'content': {'parts': [{'text': '...'}]}}]}
             gemini_text_response = ""
             if gemini_response_data.get('candidates') and \
                len(gemini_response_data['candidates']) > 0 and \
@@ -199,7 +197,6 @@ Present your findings in a concise summary, using bullet points or sections for 
 
         except Exception as e_summary:
             current_app.logger.error(f"Error saving Gemini API response to summary file: {str(e_summary)}")
-        # ---- END Save Gemini Response ----
 
     except requests.exceptions.RequestException as e:
         current_app.logger.error(f"Error calling Gemini API: {str(e)}")
@@ -207,6 +204,5 @@ Present your findings in a concise summary, using bullet points or sections for 
             current_app.logger.error(f"Gemini API Error Response Content: {e.response.text}")
     except Exception as e:
         current_app.logger.error(f"An unexpected error occurred during Gemini API integration: {str(e)}")
-    # ---- END Gemini API Integration ----
 
     return "Chat saved successfully", 200
