@@ -1,47 +1,63 @@
 <template>
-  <div
-    class='col-11 q-pa-md'
-    ref='messagesDiv'
-    style='overflow-y: scroll; overflow-x: hidden'
-  >
-    <q-chat-message
-      v-for='item in messageStore.messages'
-      :key='item.message'
-      :text='[item.message]'
-      :sent='item.user?.human'
-      :name='item.user?.name'
-    />
-    <q-chat-message
-        :name='botUser?.name'
-        :sent='botUser?.human'
-        v-if='waiting'
-      >
-        <q-spinner-dots size='2rem' />
-      </q-chat-message>
-  </div>
-
-  <div class='col-1 q-mr-md'>
-    <q-btn
-      color='negative'
-      label='END CHAT'
-      class='q-mb-md'
-      @click='endChat'
-    />
-    <q-input
-      filled
-      bottom-slots
-      v-model='text'
-      label='Label'
-      dense
-      @keyup.enter='submit'
+  <div class="chat-window column fit">
+    <!-- Messages Area -->
+    <div
+      class="messages-area col q-pa-md"
+      ref="messagesDiv"
     >
-      <template v-slot:before>
-        <q-avatar icon='account_circle' />
-      </template>
-      <template v-slot:after>
-        <q-btn round dense flat icon='send' @click='submit' />
-      </template>
-    </q-input>
+      <q-chat-message
+        v-for="item in messageStore.messages"
+        :key="item.message + item.timestamp"
+        :text="[item.message]"
+        :sent="item.user?.human"
+        :name="item.user?.name"
+        class="q-mb-sm"
+      />
+      <q-chat-message
+        :name="botUser?.name"
+        :sent="botUser?.human"
+        v-if="waiting"
+        class="q-mb-sm"
+      >
+        <q-spinner-dots size="2rem" />
+      </q-chat-message>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-area q-pa-md">
+      <q-input
+        filled
+        v-model="text"
+        placeholder="Type your message..."
+        @keyup.enter="submit"
+        class="chat-input q-mb-md"
+      >
+        <template v-slot:before>
+          <q-avatar color="primary" text-color="white" icon="account_circle" />
+        </template>
+        <template v-slot:after>
+          <q-btn 
+            round 
+            dense 
+            flat 
+            icon="send" 
+            color="primary"
+            @click="submit"
+            :disable="!text.trim()"
+          />
+        </template>
+      </q-input>
+      
+      <!-- END CHAT Button -->
+      <div class="row justify-center">
+        <q-btn
+          color="negative"
+          label="END CHAT"
+          @click="endChat"
+          class="q-px-lg"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -214,3 +230,47 @@ onUnmounted(() => {
   source?.close();
 });
 </script>
+
+<style scoped>
+.chat-window {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #ffffff;
+  min-height: 0; /* Important for proper flex scrolling */
+}
+
+.input-area {
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.chat-input {
+  background: white;
+}
+
+/* Custom scrollbar for messages area */
+.messages-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-area::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.messages-area::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.messages-area::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+</style>
