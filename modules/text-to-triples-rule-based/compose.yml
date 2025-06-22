@@ -1,5 +1,6 @@
 services:
   text-to-triples-rule-based:
+    container_name: text-to-triples-rule-based
     env_file: 
     - setup.env
     - ./modules/text-to-triples-rule-based/config.env
@@ -9,3 +10,7 @@ services:
     volumes:
     - ./modules/text-to-triples-rule-based/app:/app
     depends_on: []
+    networks:
+      default:
+        aliases:
+          - text-to-triples-rule-based

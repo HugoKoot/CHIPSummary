@@ -14,6 +14,29 @@ Welcome! This README will explain the general structure of the CHIP Modular Syst
 ## Quick Start
 For a quick start with default settings, just navigate to the root folder and use `./chip.sh start`. You may access the front end at `http://localhost:9000`.
 
+### Important: `setup.env` Configuration
+The `chip.sh` script has a known issue where it cannot correctly generate the `setup.env` file. You must create this file manually in the root of the project with the following content:
+
+```
+FRONT_END_GRADIO=front-end-gradio:7860
+RP_HUGOOOT_FRONTEND_CHATSUMMARY=rp-hugokoot-frontend-chatsummary:5000
+LOGGER_DEFAULT=logger-default:5000
+REASONING_DEMO=reasoning-demo:5000
+RESPONSE_GENERATOR_LLM_LOCAL=response-generator-llm-local:5000
+TEXT_TO_TRIPLES_LLM=text-to-triples-llm:5000
+RESPONSE_GENERATOR_GEMINI=response-generator-gemini:5000
+RESPONSE_GENERATOR_DEMO=response-generator-demo:5000
+TEXT_TO_TRIPLES_RULE_BASED=text-to-triples-rule-based:5000
+KNOWLEDGE_DEMO=knowledge-demo:7200
+REDIS=redis:6379
+
+LOGGER_MODULE=LOGGER_DEFAULT
+FRONTEND_MODULE=RP_HUGOOOT_FRONTEND_CHATSUMMARY
+RESPONSE_GENERATOR_MODULE=RESPONSE_GENERATOR_GEMINI
+REASONER_MODULE=REASONING_DEMO
+TRIPLE_EXTRACTOR_MODULE=TEXT_TO_TRIPLES_RULE_BASED
+```
+
 ## Architecture Overview
 The system works with the notion of "core" modules, and "non-core" modules. There are five different types of core modules:
 - Front End
@@ -104,7 +127,7 @@ The system has a set of pre-configured core modules that it will start up with, 
 
 ```YAML
 logger_module: logger-default
-frontend_module: front-end-quasar
+frontend_module: rp-hugokoot-frontend-chatsummary
 response_generator_module: response-generator-gemini
 reasoner_module: reasoning-demo
 triple_extractor_module: text-to-triples-rule-based
@@ -163,7 +186,7 @@ services:  # This is always present at the root.
     depends_on: ["redis"]  # Modules that this module depends on and that will be started/built along with it.
 ```
 
-Modules should generally use the Python Flask backend, which means that somewhere in the module's directory (often the root, but sometimes it is nested, e.g. see `front-end-quasar`) there will be an `app` directory, which is the Flask app. The Flask apps are always structured as follows:
+Modules should generally use the Python Flask backend, which means that somewhere in the module's directory (often the root, but sometimes it is nested, e.g. see `rp-hugokoot-frontend-chatsummary`) there will be an `app` directory, which is the Flask app. The Flask apps are always structured as follows:
 ```
 app
 |- tests...            --> The tests
