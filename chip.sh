@@ -4,44 +4,48 @@ if [ ! -f ./core-modules.yaml ]; then
     cp ./core-modules.yaml.default ./core-modules.yaml
 fi
 
+compose_files=()
 for dir in ./modules/*; do
-    str+=" -f ${dir}/compose.yml"
-    if [ ! -f $dir/config.env ]; then
-        echo "No module configuration found for module ${dir%%:*}, creating one from defaults..."
-        cp $dir/config.env.default $dir/config.env
+    if [ -f "${dir}/compose.yml" ]; then
+        compose_files+=("-f" "${dir}/compose.yml")
+    fi
+    if [ ! -f "$dir/config.env" ]; then
+        if [ -f "$dir/config.env.default" ]; then
+            echo "No module configuration found for module ${dir}, creating one from defaults..."
+            cp "$dir/config.env.default" "$dir/config.env"
+        fi
     fi
 done
 
-docker compose -f docker-compose-base.yml ${str} config > /tmp/chiptemp
-modules=($(docker run --rm -v "/tmp":/workdir mikefarah/yq  '.services.* | key + ":" + .expose[0]' chiptemp))
-rm /tmp/chiptemp
+# docker compose -f docker-compose-base.yml ${str} config > /tmp/chiptemp
+# modules=($(docker run --rm -v "/tmp":/workdir mikefarah/yq  '.services.* | key + ":" + .expose[0]' chiptemp))
+# rm /tmp/chiptemp
 
 core_modules=($(docker run --rm -v "${PWD}":/workdir mikefarah/yq '.* | key + ":" + .' core-modules.yaml))
 
-> setup.env
-for module in ${modules[@]}; do
-    name=${module%%:*}
-    name=${name//-/_}
-    name=$( echo $name | tr '[:lower:]' '[:upper:]')
-    echo ${name}=${module} >> setup.env
-    for core_module in ${core_modules[@]}; do
-        core=${core_module%%:*}
-        core=$( echo $core | tr '[:lower:]' '[:upper:]')
-        core_name=${core_module##*:}
-        core_name=${core_name//-/_}
-        core_name=$( echo $core_name | tr '[:lower:]' '[:upper:]')
-        if [[ "$core_name" == "$name" ]]; then
-            echo $core=$name >> setup.env
-        fi
-    done
-done
-echo "Created module-address and core-module mappings in setup.env..."
+# > setup.env
+# for module in ${modules[@]}; do
+#     name=${module%%:*}
+#     name=${name//-/_}
+#     name=$( echo $name | tr '[:lower:]' '[:upper:]')
+#     echo ${name}=${module} >> setup.env
+#     for core_module in ${core_modules[@]}; do
+#         core=${core_module%%:*}
+#         core=$( echo $core | tr '[:lower:]' '[:upper:]')
+#         core_name=${core_module##*:}
+#         core_name=${core_name//-/_}
+#         core_name=$( echo $core_name | tr '[:lower:]' '[:upper:]')
+#         if [[ "$core_name" == "$name" ]]; then
+#             echo $core=$name >> setup.env
+#         fi
+#     done
+# done
+# echo "Created module-address and core-module mappings in setup.env..."
 
 modules_up=""
 for core_module in ${core_modules[@]}; do
         modules_up+=${core_module##*:}" "
 done
-
 
 if [[ -z "$1" ]] ; then
 echo "Finished setting up!"
@@ -53,35 +57,35 @@ case $1 in
     if [[ -z "$2" ]] ; then
         echo "Building core modules:"
         echo $modules_up
-        docker compose -f docker-compose-base.yml ${str} build ${modules_up}
+        docker compose -f docker-compose-base.yml ${compose_files[@]} build ${modules_up}
     else
         echo "Building specific modules: "+"${@:2}"
-        docker compose -f docker-compose-base.yml ${str} build "${@:2}"
+        docker compose -f docker-compose-base.yml ${compose_files[@]} build "${@:2}"
     fi
     ;;
   start)
     if [[ -z "$2" ]] ; then
         echo "Starting system with core modules:"
         echo $modules_up
-        docker compose -f docker-compose-base.yml ${str} build ${modules_up}
-        docker compose -f docker-compose-base.yml ${str} up ${modules_up}
+        docker compose -f docker-compose-base.yml ${compose_files[@]} build ${modules_up}
+        docker compose -f docker-compose-base.yml ${compose_files[@]} up ${modules_up}
     else
         echo "Starting specific modules: "+"${@:2}"
-        docker compose -f docker-compose-base.yml ${str} build "${@:2}"
-        docker compose -f docker-compose-base.yml ${str} up "${@:2}"
+        docker compose -f docker-compose-base.yml ${compose_files[@]} build "${@:2}"
+        docker compose -f docker-compose-base.yml ${compose_files[@]} up "${@:2}"
     fi
     ;;
   stop)
     echo "Taking down full system..."
-    docker compose -f docker-compose-base.yml ${str} down
+    docker compose -f docker-compose-base.yml ${compose_files[@]} down
     ;;
   clean)
     echo "Taking down full system and removing volume data..."
-    docker compose -f docker-compose-base.yml ${str} down -v
+    docker compose -f docker-compose-base.yml ${compose_files[@]} down -v
     ;;
   config)
     echo "Showing the merged compose file that will be used..."
-    docker compose -f docker-compose-base.yml ${str} config
+    docker compose -f docker-compose-base.yml ${compose_files[@]} config
     ;;
   list)
     echo "Listing all available modules..."
